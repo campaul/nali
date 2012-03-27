@@ -1,56 +1,46 @@
 from lang import *
 
-class Interpreter(object):
+def nali_eval(tokens, namespace):
+    expression = []
+    
+    while len(tokens) > 0:
+        token = tokens.pop(0)
+        if token == '(':
+            expression.append(nali_eval(tokens, namespace))
+        elif token == ')':
+            break
+        elif token[0] == "[":
+            expression.append(parse_function(tokens, namespace, nali_eval))
+        elif token[0] == "\"":
+            expression.append(token[1:len(token) - 1])
+        elif token[0] == ":":
+            expression.append(Symbol(token))
+        elif token[0] == ".":
+            expression.append(Message(token))
+        elif token.isdigit():
+            expression.append(Number(int(token)))
+        else:
+            expression.append(namespace[token])
 
-    def __init__(self):
-        self.namespace = dict(stdlib.items())
-        self.namespace['def'] = Namespace(self.namespace)
+    return nali_exec(expression)
 
-    def nali_eval(self, tokens, namespace):
-        expression = []
-        
-        while len(tokens) > 0:
-            token = tokens.pop(0)
-            if token == '(':
-                expression.append(self.nali_eval(tokens, namespace))
-            elif token == ')':
-                break
-            elif token[0] == "[":
-                expression.append(parse_function(tokens, namespace, self.nali_eval))
-            elif token[0] == "\"":
-                expression.append(token[1:len(token) - 1])
-            elif token[0] == ":":
-                expression.append(Symbol(token))
-            elif token[0] == ".":
-                expression.append(Message(token))
-            elif token.isdigit():
-                expression.append(Number(int(token)))
-            else:
-                expression.append(namespace[token])
+def nali_exec(expression):
 
-        return self.nali_exec(expression)
+    if len(expression) == 1 and expression[0].arg_count() > 0:
+        return expression[0]
 
-    def nali_exec(self, expression):
-        
-        for i in range(len(expression)):
-            if isinstance(expression[i], list):
-                expression[i] = self.nali_execute(expression[i])
+    obj = expression[0]
+    arg = expression[1:]
 
-        if len(expression) == 1 and expression[0].arg_count() > 0:
-            return expression[0]
+    if(len(arg) == 0):
+        obj = obj.execute(None)
+    
+    while len(arg) > 0:
+        arg_count = obj.arg_count()
+        obj = obj.execute(arg[:arg_count])
+        arg = arg[arg_count:]
 
-        obj = expression[0]
-        arg = expression[1:]
-
-        if(len(arg) == 0):
-            obj = obj.execute(None)
-        
-        while len(arg) > 0:
-            arg_count = obj.arg_count()
-            obj = obj.execute(arg[:arg_count])
-            arg = arg[arg_count:]
-
-        return obj
+    return obj
 
 def tokenize(expression):
     tokens = ['(',')','[',']','|','+','-',';']
@@ -98,10 +88,11 @@ def parse_string(tokens):
     pass
 
 def repl():
-    i = Interpreter()
-    
+    namespace = dict(stdlib.items())
+    namespace['def'] = Namespace(namespace)
+
     while(True):
         try:
-            print i.nali_eval(tokenize(raw_input('>> ')), i.namespace)
+            print nali_eval(tokenize(raw_input('>> ')), namespace)
         except Exception, e:
             print e.__class__.__name__ +  ": " + e.message
