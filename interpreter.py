@@ -16,7 +16,7 @@ class Interpreter(object):
             elif token == ')':
                 break
             elif token[0] == "[":
-                expression.append(parse_function(tokens, namespace))
+                expression.append(parse_function(tokens, namespace, self.nali_eval))
             elif token[0] == "\"":
                 expression.append(token[1:len(token) - 1])
             elif token[0] == ":":
@@ -64,7 +64,7 @@ def tokenize(expression):
 
     return expression.split()
 
-def parse_function(tokens, namespace):
+def parse_function(tokens, namespace, eval_func):
     prototype = []
     expressions = []
     expression = []
@@ -92,7 +92,7 @@ def parse_function(tokens, namespace):
 
     expression.pop()
     
-    return Function(namespace, prototype, expressions, self.nali_eval)
+    return Function(namespace, prototype, expressions, eval_func)
 
 def parse_string(tokens):
     pass
