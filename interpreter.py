@@ -25,7 +25,6 @@ def nali_eval(tokens, namespace):
     return nali_exec(expression)
 
 def nali_exec(expression):
-
     if len(expression) == 1 and expression[0].arg_count() > 0:
         return expression[0]
 
