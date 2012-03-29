@@ -1,12 +1,14 @@
 import copy
 
+
 class Object(object):
 
     def __init__(self):
+        super(Object, self).__init__()
         self.namespace = {}
 
     def execute(self, args):
-        if type(args[0])  == Symbol:
+        if isinstance(args[0], Symbol):
             return Setter(self, str(args[0]))
         elif isinstance(self.namespace[str(args[0])], Function):
             return Caller(self, self.namespace[str(args[0])])
@@ -18,6 +20,7 @@ class Object(object):
         
     def __str__(self):
         return '[object]'
+
 
 class Function(Object):
 
@@ -32,9 +35,12 @@ class Function(Object):
             namespace = dict(self.namespace.items() + dict(zip(self.prototype, args)).items())
         else:
             namespace = dict(self.namespace.items())
+
         namespace['def'] = Namespace(namespace)
+
         for expression in self.expressions:
             result = self.eval_func(expression[:], namespace)
+
         return result
 
     def arg_count(self):
@@ -43,24 +49,31 @@ class Function(Object):
     def __str__(self):
         return "[function]"
 
+
 class Namespace(Object):
+
     def __init__(self, namespace):
         self.namespace = namespace
 
+
 class Message(Object):
+
     def __init__(self, value):
         self.value = value
 
     def __str__(self):
         return self.value[1:]
 
+
 class Symbol(Object):
+
     def __init__(self, value):
         super(Symbol, self).__init__()
         self.value = value
 
     def __str__(self):
         return self.value[1:]
+
 
 class Setter(Object):
     def __init__(self, target, name):
@@ -71,7 +84,9 @@ class Setter(Object):
         self.target.namespace[self.name] = args[0]
         return args[0]
 
+
 class Caller(Object):
+
     def __init__(self, caller, function):
         self.caller = caller
         self.function = function
@@ -79,10 +94,12 @@ class Caller(Object):
     def execute(self, args):
         if not args:
             args = []
+
         return self.function.execute([self.caller] + args)
     
     def arg_count(self):
         return self.function.arg_count() - 1
+
 
 class Print(Function):
 
@@ -96,6 +113,7 @@ class Print(Function):
     def arg_count(self):
         return 1
 
+
 class Exit(Function):
 
     def __init__(self):
@@ -106,6 +124,7 @@ class Exit(Function):
 
     def arg_count(self):
         return 0
+
 
 class Add(Function):
     
@@ -118,6 +137,7 @@ class Add(Function):
     def arg_count(self):
         return 2
 
+
 class Subtract(Function):
     
     def __init__(self):
@@ -128,6 +148,7 @@ class Subtract(Function):
 
     def arg_count(self):
         return 2
+
 
 class Multiply(Function):
     
@@ -140,6 +161,7 @@ class Multiply(Function):
     def arg_count(self):
         return 2
     
+
 class Divide(Function):
     
     def __init__(self):
@@ -150,6 +172,7 @@ class Divide(Function):
 
     def arg_count(self):
         return 2
+
 
 class Mod(Function):
     
@@ -162,6 +185,7 @@ class Mod(Function):
     def arg_count(self):
         return 2
         
+
 class New(Function):
     
     def __init__(self):
@@ -173,22 +197,26 @@ class New(Function):
     def arg_count(self):
         return 1
 
+
 class Number(Object):
 
     def __init__(self, value):
         super(Number, self).__init__()
         self.value = value
-        self.namespace["add"] = stdlib['add']
-        self.namespace["sub"] = stdlib['sub']
-        self.namespace["mul"] = stdlib['mul']
-        self.namespace["div"] = stdlib['div']
-        self.namespace["mod"] = stdlib['mod']
+        self.namespace = {
+            'add': stdlib['add'],
+            'sub': stdlib['sub'],
+            'mul': stdlib['mul'],
+            'div': stdlib['div'],
+            'mod': stdlib['mod']
+        }
 
     def val(self):
         return self.value
     
     def __str__(self):
         return str(self.value)
+
         
 stdlib = {
     'object': Object(),
