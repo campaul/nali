@@ -1,4 +1,16 @@
-from lang import *
+from lang import Boolean, Function, Message, Namespace, Number, Symbol, stdlib
+
+
+class Interpreter(object):
+
+    def __init__(self):
+        super(Interpreter, self).__init__()
+        self.namespace = dict(stdlib.items())
+        self.namespace['def'] = Namespace(self.namespace)
+
+    def _eval(self, expression):
+        return nali_eval(tokenize(expression), self.namespace)
+
 
 def nali_eval(tokens, namespace):
     expression = []
@@ -16,9 +28,19 @@ def nali_eval(tokens, namespace):
         elif token[0] == ":":
             expression.append(Symbol(token))
         elif token[0] == ".":
-            expression.append(Message(token))
+            if token[1:].isdigit():
+                expression.append(Number(float('.'.join([
+                    str(expression.pop()),
+                    token[1:]
+                ]))))
+            else:
+                expression.append(Message(token))
         elif token.isdigit():
             expression.append(Number(int(token)))
+        elif token == 'true':
+            expression.append(Boolean(True))
+        elif token == 'false':
+            expression.append(Boolean(False))
         else:
             expression.append(namespace[token])
 
@@ -87,11 +109,10 @@ def parse_string(tokens):
     pass
 
 def repl():
-    namespace = dict(stdlib.items())
-    namespace['def'] = Namespace(namespace)
+    interpreter = Interpreter()
 
     while(True):
         try:
-            print nali_eval(tokenize(raw_input('>> ')), namespace)
+            print interpreter._eval(raw_input('>> '))
         except Exception, e:
             print e.__class__.__name__ +  ": " + e.message

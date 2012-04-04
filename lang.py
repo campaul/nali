@@ -1,4 +1,5 @@
 import copy
+import interpreter
 
 
 class Object(object):
@@ -20,6 +21,9 @@ class Object(object):
         
     def __str__(self):
         return '[object]'
+
+    def val(self):
+        return self
 
 
 class Function(Object):
@@ -198,6 +202,18 @@ class New(Function):
         return 1
 
 
+class Echo(Function):
+    
+    def __init__(self):
+        pass
+        
+    def execute(self, args):
+        return args[0]
+    
+    def arg_count(self):
+        return 1
+
+
 class Number(Object):
 
     def __init__(self, value):
@@ -217,6 +233,34 @@ class Number(Object):
     def __str__(self):
         return str(self.value)
 
+
+class Boolean(Object):
+
+    def __init__(self, value):
+        super(Boolean, self).__init__()
+        self.value = value
+
+    def val(self):
+        return self.value
+
+    def __str__(self):
+        return str(self.value)
+
+
+class If(Function):
+
+    def __init__(self):
+        pass
+
+    def execute(self, args):
+        if interpreter.nali_exec([args[0]]).val():
+            return interpreter.nali_exec([args[1]])
+        else:
+            return interpreter.nali_exec([args[2]])
+    
+    def arg_count(self):
+        return 3
+
         
 stdlib = {
     'object': Object(),
@@ -227,6 +271,8 @@ stdlib = {
     'div': Divide(),
     'mod': Mod(),
     'exit': Exit(),
+    'if': If(),
+    'echo': Echo(),
     '+': Message('.add'),
     '-': Message('.sub'),
     '*': Message('.mul'),
