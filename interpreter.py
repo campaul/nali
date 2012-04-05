@@ -1,4 +1,4 @@
-from lang import Boolean, Function, Message, Namespace, Number, Symbol, stdlib
+from lang import Boolean, Function, List, Message, Namespace, Number, Symbol, stdlib
 
 
 class Interpreter(object):
@@ -41,12 +41,15 @@ def nali_eval(tokens, namespace):
             expression.append(Boolean(True))
         elif token == 'false':
             expression.append(Boolean(False))
+        elif token == '{':
+            expression.append(parse_list(tokens, namespace, nali_eval))
         else:
             expression.append(namespace[token])
 
     return nali_exec(expression)
 
 def nali_exec(expression):
+
     if len(expression) == 1 and expression[0].arg_count() > 0:
         return expression[0]
 
@@ -64,7 +67,7 @@ def nali_exec(expression):
     return obj
 
 def tokenize(expression):
-    tokens = ['(',')','[',']','|','+','-',';']
+    tokens = ['(',')','[',']','|','+','-',';','{','}']
     prefixes = ['.',':']
     
     for token in tokens:
@@ -108,6 +111,17 @@ def parse_function(tokens, namespace, eval_func):
 def parse_string(tokens):
     pass
 
+def parse_list(tokens, namespace, eval_func):
+
+    l = List()
+    token = tokens.pop(0)
+    
+    while token != '}': 
+        l.append(eval_func([token], namespace))
+        token = tokens.pop(0)
+
+    return l
+
 def repl():
     interpreter = Interpreter()
 
@@ -115,4 +129,5 @@ def repl():
         try:
             print interpreter._eval(raw_input('>> '))
         except Exception, e:
+            raise
             print e.__class__.__name__ +  ": " + e.message

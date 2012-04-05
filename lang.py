@@ -250,6 +250,35 @@ class Boolean(Object):
         return str(self.value)
 
 
+class List(Object):
+    
+    def __init__(self):
+        super(List, self).__init__()
+        self.namespace = {
+            'do': stdlib['do']
+        }
+        self.items = []
+
+    def append(self, item):
+        self.items.append(item)
+
+    def remove(self, item):
+        self.items.remove(item)
+
+
+class Do(Function):
+
+    def __init__(self):
+        pass
+
+    def execute(self, args):
+        for item in args[0].items:
+            args[1].execute([item])
+
+    def arg_count(self):
+        return 2
+
+
 class If(Function):
 
     def __init__(self):
@@ -315,6 +344,8 @@ stdlib = {
     'lt': Less(),
     'equal': Equal(),
     'echo': Echo(),
+    'print': Print(),
+    'do': Do(),
     '+': Message('.add'),
     '-': Message('.sub'),
     '*': Message('.mul'),
