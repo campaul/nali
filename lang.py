@@ -224,7 +224,10 @@ class Number(Object):
             'sub': stdlib['sub'],
             'mul': stdlib['mul'],
             'div': stdlib['div'],
-            'mod': stdlib['mod']
+            'mod': stdlib['mod'],
+            'equal': stdlib['equal'],
+            'gt': stdlib['gt'],
+            'lt': stdlib['lt']
         }
 
     def val(self):
@@ -261,6 +264,42 @@ class If(Function):
     def arg_count(self):
         return 3
 
+
+class Equal(Function):
+
+    def __init__(self):
+        pass
+
+    def execute(self, args):
+        return Boolean(args[0].val() == args[1].val())
+
+    def arg_count(self):
+        return 2
+
+
+class Greater(Function):
+
+    def __init__(self):
+        pass
+
+    def execute(self, args):
+        return Boolean(args[0].val() > args[1].val())
+
+    def arg_count(self):
+        return 2
+
+
+class Less(Function):
+
+    def __init__(self):
+        pass
+
+    def execute(self, args):
+        return Boolean(args[0].val() < args[1].val())
+
+    def arg_count(self):
+        return 2
+
         
 stdlib = {
     'object': Object(),
@@ -272,10 +311,16 @@ stdlib = {
     'mod': Mod(),
     'exit': Exit(),
     'if': If(),
+    'gt': Greater(),
+    'lt': Less(),
+    'equal': Equal(),
     'echo': Echo(),
     '+': Message('.add'),
     '-': Message('.sub'),
     '*': Message('.mul'),
     '/': Message('.div'),
-    '%': Message('.mod')
+    '%': Message('.mod'),
+    '=': Message('.equal'),
+    '>': Message('.gt'),
+    '<': Message('.lt')
 }
