@@ -70,11 +70,8 @@ def tokenize(expression):
     tokens = ['(',')','[',']','|','+','-',';','{','}']
     prefixes = ['.',':']
     
-    for token in tokens:
-        expression = expression.replace(token, token.join([' ',' ']))
-
-    for prefix in prefixes:
-        expression = expression.replace(prefix, prefix.join([' ','']))
+    [expression.replace(token, token.join([' ',' '])) for token in tokens]
+    [expression.replace(prefix, prefix.join([' ',''])) for prefix in prefixes]
 
     return expression.split()
 
