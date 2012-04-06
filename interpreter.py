@@ -129,5 +129,4 @@ def repl():
         try:
             print interpreter._eval(raw_input('>> '))
         except Exception, e:
-            raise
             print e.__class__.__name__ +  ": " + e.message
