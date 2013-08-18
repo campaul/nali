@@ -14,7 +14,7 @@ class Interpreter(object):
 
 def nali_eval(tokens, namespace):
     expression = []
-    
+
     while len(tokens) > 0:
         token = tokens.pop(0)
         if token == '(':
@@ -58,7 +58,7 @@ def nali_exec(expression):
 
     if(len(arg) == 0):
         obj = obj.execute(None)
-    
+
     while len(arg) > 0:
         arg_count = obj.arg_count()
         obj = obj.execute(arg[:arg_count])
@@ -69,7 +69,7 @@ def nali_exec(expression):
 def tokenize(expression):
     tokens = ['(',')','[',']','|','+','-',';','{','}']
     prefixes = ['.',':']
-    
+
     for token in tokens:
         expression = expression.replace(token, token.join([' ',' ']))
 
@@ -105,7 +105,7 @@ def parse_function(tokens, namespace, eval_func):
             expression.append(token)
 
     expression.pop()
-    
+
     return Function(namespace, prototype, expressions, eval_func)
 
 def parse_string(tokens):
@@ -115,8 +115,8 @@ def parse_list(tokens, namespace, eval_func):
 
     l = List()
     token = tokens.pop(0)
-    
-    while token != '}': 
+
+    while token != '}':
         l.append(eval_func([token], namespace))
         token = tokens.pop(0)
 

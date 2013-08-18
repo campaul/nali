@@ -1,5 +1,5 @@
 import copy
-import interpreter
+import nali_interpreter
 
 
 class Object(object):
