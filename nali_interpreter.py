@@ -9,7 +9,7 @@ class Interpreter(object):
         self.namespace['def'] = Namespace(self.namespace)
 
     def eval(self, expression):
-        return nali_eval(tokenize(expression), self.namespace).execute(None)
+        return nali_eval(tokenize(expression), self.namespace).val()
 
 
 class Expression(object):
