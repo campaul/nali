@@ -1,6 +1,13 @@
 import testify as T
 
-from nali_interpreter import tokenize
+from nali_interpreter import Interpreter, tokenize
+
+
+class InterpreterTestCase(T.TestCase):
+
+    @T.setup
+    def setup(self):
+        self.interpreter = Interpreter()
 
 
 class TokenizerTestCase(T.TestCase):
