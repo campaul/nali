@@ -1,5 +1,4 @@
 import copy
-import nali_interpreter
 
 
 class Object(object):
@@ -285,10 +284,10 @@ class If(Function):
         pass
 
     def execute(self, args):
-        if interpreter.nali_exec([args[0]]).val():
-            return interpreter.nali_exec([args[1]])
+        if args[0].execute(None).val():
+            return args[1].val()
         else:
-            return interpreter.nali_exec([args[2]])
+            return args[2].val()
     
     def arg_count(self):
         return 3
