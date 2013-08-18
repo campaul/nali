@@ -50,7 +50,7 @@ def nali_eval(tokens, namespace):
 
 def nali_exec(expression):
 
-    if len(expression) == 1 and expression[0].arg_count() > 0:
+    if len(expression) == 1 and not type(expression[0]) == Function:
         return expression[0]
 
     obj = expression[0]
@@ -81,7 +81,7 @@ def tokenize(expression):
 def parse_function(tokens, namespace, eval_func):
     prototype = []
     expressions = []
-    expression = []
+    expression = ['echo']
     expressions.append(expression)
 
     if(tokens[0] == '|'):
@@ -99,7 +99,7 @@ def parse_function(tokens, namespace, eval_func):
         if token == ']':
             count = count - 1
         if token == ';':
-            expression = []
+            expression = ['echo']
             expressions.append(expression)
         else:
             expression.append(token)
