@@ -8,7 +8,7 @@ class Interpreter(object):
         self.namespace = dict(stdlib.items())
         self.namespace['def'] = Namespace(self.namespace)
 
-    def _eval(self, expression):
+    def eval(self, expression):
         return nali_eval(tokenize(expression), self.namespace).execute(None)
 
 
@@ -152,6 +152,6 @@ def repl():
 
     while(True):
         try:
-            print interpreter._eval(raw_input('>> '))
+            print interpreter.eval(raw_input('>> '))
         except Exception, e:
             print e.__class__.__name__ +  ": " + e.message

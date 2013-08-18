@@ -8,6 +8,6 @@ if len(sys.argv) > 1:
     i = interpreter.Interpreter()
     
     for line in open(sys.argv[1], 'r'):
-        i._eval(line)
+        i.eval(line)
 else:
     nali_interpreter.repl()
