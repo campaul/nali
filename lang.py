@@ -24,6 +24,12 @@ class Object(object):
     def val(self):
         return self
 
+    def __eq__(self, other):
+        if isinstance(other, Object):
+            return self.val() == other.val()
+        else:
+            return self.val() == other
+
 
 class Function(Object):
 
