@@ -9,7 +9,25 @@ class Interpreter(object):
         self.namespace['def'] = Namespace(self.namespace)
 
     def _eval(self, expression):
-        return nali_eval(tokenize(expression), self.namespace)
+        return nali_eval(tokenize(expression), self.namespace).execute(None)
+
+
+class Expression(object):
+
+    def __init__(self, expression):
+        self.expression = expression
+
+    def execute(self, args):
+        return nali_exec(self.expression)
+
+    def arg_count(self):
+        return 0
+
+    def __str__(self):
+        return nali_exec(self.expression).__str__()
+
+    def val(self):
+        return nali_exec(self.expression).val()
 
 
 def nali_eval(tokens, namespace):
@@ -46,11 +64,18 @@ def nali_eval(tokens, namespace):
         else:
             expression.append(namespace[token])
 
-    return nali_exec(expression)
+    return Expression(expression)
+
+def wrap(obj):
+
+    if type(obj) == int:
+        return Number(obj)
+
+    return obj
 
 def nali_exec(expression):
 
-    if len(expression) == 1 and not type(expression[0]) == Function:
+    if len(expression) == 1 and not isinstance(expression[0], Function):
         return expression[0]
 
     obj = expression[0]
@@ -64,7 +89,7 @@ def nali_exec(expression):
         obj = obj.execute(arg[:arg_count])
         arg = arg[arg_count:]
 
-    return obj
+    return wrap(obj)
 
 def tokenize(expression):
     tokens = ['(',')','[',']','|','+','-',';','{','}']
