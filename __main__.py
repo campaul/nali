@@ -2,7 +2,7 @@
 
 import readline
 import sys
-import interpreter
+import nali_interpreter
 
 if len(sys.argv) > 1:
     i = interpreter.Interpreter()
@@ -10,4 +10,4 @@ if len(sys.argv) > 1:
     for line in open(sys.argv[1], 'r'):
         i._eval(line)
 else:
-    interpreter.repl()
+    nali_interpreter.repl()
