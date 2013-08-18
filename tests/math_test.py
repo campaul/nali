@@ -19,3 +19,7 @@ class MathTestCase(InterpreterTestCase):
 
     def test_modulo(self):
         T.assert_equal(self.interpreter.eval('5 % 3'), 2)
+
+    def test_order_of_operations(self):
+        T.assert_equal(self.interpreter.eval('2 + 3 * 4'), 20)
+        T.assert_equal(self.interpreter.eval('2 + (3 * 4)'), 14)
