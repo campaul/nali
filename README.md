@@ -49,7 +49,7 @@ operations or invoke methods that take no arguments. For example, if an object
 5
 ```
 
-## Defining Variables
+### Defining Variables
 
 Most objects execute with one argument, which is either a message or a symbol.
 Note: functions are a special type of object that can execute with any numbers
@@ -82,7 +82,7 @@ the code blocks of Smalltalk.
 4
 ```
 
-## Objects
+### Objects
 
 In **nali**, everything is an object. Unlike many object-oriented languages,
 however, **nali** does not have classes. Instead, you can create a new object by
@@ -92,7 +92,7 @@ cloning an existing object. This is done with the `new` function.
 >> def :foo (new object)
 ```
 
-## Lists
+### Lists
 
 A list can be defined by using the literal notation as follows:
 
@@ -112,7 +112,7 @@ do method.
 11
 ```
 
-## Control Flow
+### Control Flow
 
 If statements can be implemented using the ternary `if` function.
 
@@ -121,3 +121,6 @@ If statements can be implemented using the ternary `if` function.
 >> max 5 7
 7
 ```
+
+## Running Tests
+The test suite for **nali** can be run with Testify using `testify tests`.
